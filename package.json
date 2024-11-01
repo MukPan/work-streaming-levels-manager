@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "ts-node src/main.ts",
-    "start": "node build/main.js",
-    "compile": "tsc -p ."
+    "start": "node build/src/main.js",
+    "compile": "tsc -p .",
+    "reg-cmd": "ts-node reg-cmd.ts"
   },
   "keywords": [],
   "author": "",

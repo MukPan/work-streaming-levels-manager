@@ -21,3 +21,8 @@ npm run compile
 ```bash
 npm run start
 ```
+# スラッシュコマンドの追加
+
+```bash
+npm run reg-cmd
+```

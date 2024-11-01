@@ -1,5 +1,6 @@
 import {GatewayIntentBits, Client, Partials, Events} from 'discord.js'
 import dotenv from 'dotenv'
+import {heyCmd, heyFunc} from "./commands/hey";
 
 //.envファイルを読み込む
 dotenv.config()
@@ -32,22 +33,35 @@ client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
   // heyコマンドに対する処理
-  if (interaction.commandName === "hey") {
+  if (interaction.commandName === heyCmd.name) {
     try {
-      await interaction.reply('こんにちは！');
+      await heyFunc(interaction);
     } catch (error) {
       //エラー
       console.error(error);
       if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({ content: 'コマンド実行時にエラーになりました。', ephemeral: true });
+        await interaction.followUp({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
       } else {
-        await interaction.reply({ content: 'コマンド実行時にエラーになりました。', ephemeral: true });
+        await interaction.reply({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
       }
     }
+  } else if (interaction.commandName === "rec") {
+    try {
+      await interaction.reply('recコマンドが実行されました。');
+    } catch (error) {
+      //エラー
+      console.error(error);
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
+      } else {
+        await interaction.reply({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
+      }
+    }
+
   // else if (こまんどー) {}
   //未対応のコマンド
   } else {
-    console.error(`${interaction.commandName}というコマンドには対応していません。`);
+    console.error(`${interaction.commandName}というコマンドには対応していません。。。。。`);
   }
 });
 
