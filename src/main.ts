@@ -1,9 +1,17 @@
-import {GatewayIntentBits, Client, Partials, Events} from 'discord.js'
-import dotenv from 'dotenv'
-import {heyCmd, heyFunc} from "./commands/hey";
+import {GatewayIntentBits, Client, Partials, Events} from 'discord.js';
+import dotenv from 'dotenv';
+import {heyCmd} from "./commands/hey";
+import {Command} from "./types/command";
+import {recordStartCmd} from "./commands/record_start";
+
+//コマンドデータを配列に格納
+const commands: Command[] = [
+  heyCmd,
+  recordStartCmd,
+];
 
 //.envファイルを読み込む
-dotenv.config()
+dotenv.config();
 
 //Discordのクライアントを作成
 const client = new Client({
@@ -16,7 +24,7 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates, //ボイスチャンネルの状態
   ],
   partials: [Partials.Message, Partials.Channel],
-})
+});
 
 //Botがきちんと起動したか確認
 client.once(Events.ClientReady, () => {
@@ -24,7 +32,7 @@ client.once(Events.ClientReady, () => {
   if (client.user) {
     console.log(client.user.tag)
   }
-})
+});
 
 //スラッシュコマンドに応答するためには、
 //InteractionCreateのイベントリスナー使う必要がある
@@ -32,36 +40,22 @@ client.on(Events.InteractionCreate, async interaction => {
   // スラッシュコマンドかチェック
   if (!interaction.isChatInputCommand()) return;
 
-  // heyコマンドに対する処理
-  if (interaction.commandName === heyCmd.name) {
-    try {
-      await heyFunc(interaction);
-    } catch (error) {
-      //エラー
-      console.error(error);
-      if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
-      } else {
-        await interaction.reply({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
+  //一致コマンドチェック
+  for (const command of commands) {
+    if (interaction.commandName === command.conf.name) {
+      //実行
+      try {
+        await command.func(interaction);
+        //エラー
+      } catch (error) {
+        console.error(error);
+        if (interaction.replied || interaction.deferred) {
+          await interaction.followUp({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
+        } else {
+          await interaction.reply({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
+        }
       }
     }
-  } else if (interaction.commandName === "rec") {
-    try {
-      await interaction.reply('recコマンドが実行されました。');
-    } catch (error) {
-      //エラー
-      console.error(error);
-      if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
-      } else {
-        await interaction.reply({content: 'コマンド実行時にエラーになりました。', ephemeral: true});
-      }
-    }
-
-  // else if (こまんどー) {}
-  //未対応のコマンド
-  } else {
-    console.error(`${interaction.commandName}というコマンドには対応していません。。。。。`);
   }
 });
 

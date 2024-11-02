@@ -1,11 +1,13 @@
-import {REST, Routes, SlashCommandBuilder} from "discord.js";
+import {REST, Routes} from "discord.js";
 import dotenv from "dotenv";
 import {heyCmd} from "./src/commands/hey";
+import {recordStartCmd} from "./src/commands/record_start";
 
 dotenv.config();
 
 const commands = [
-  heyCmd.toJSON(),
+  heyCmd.conf.toJSON(),
+  recordStartCmd.conf.toJSON(),
 ];
 
 const rest = new REST({ version: "10" })
