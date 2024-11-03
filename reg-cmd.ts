@@ -1,13 +1,13 @@
 import {REST, Routes} from "discord.js";
 import dotenv from "dotenv";
 import {heyCmd} from "./src/commands/hey";
-import {recordStartCmd} from "./src/commands/record_start";
+import {showStreamingUsersCmd} from "./src/commands/show_streaming_users";
 
 dotenv.config();
 
 const commands = [
   heyCmd.conf.toJSON(),
-  recordStartCmd.conf.toJSON(),
+  showStreamingUsersCmd.conf.toJSON(),
 ];
 
 const rest = new REST({ version: "10" })
@@ -18,9 +18,17 @@ const rest = new REST({ version: "10" })
     console.log("スラッシュコマンドの更新を開始します。");
     console.log(commands);
 
+    //グローバル
+    // await rest.put(
+    //   Routes.applicationCommands(
+    //     process.env.APPLICATION_ID!),
+    //     { body: commands },
+    // );
+
+    //ギルド
     await rest.put(
       Routes.applicationGuildCommands(
-      process.env.APPLICATION_ID!, process.env.GUILD_ID!),
+        process.env.APPLICATION_ID!, process.env.GUILD_ID!),
       { body: commands },
     );
 

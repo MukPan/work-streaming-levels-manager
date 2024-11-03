@@ -1,13 +1,13 @@
-import {GatewayIntentBits, Client, Partials, Events} from 'discord.js';
+import {GatewayIntentBits, Client, Partials, Events, Snowflake, ChannelType} from 'discord.js';
 import dotenv from 'dotenv';
 import {heyCmd} from "./commands/hey";
 import {Command} from "./types/command";
-import {recordStartCmd} from "./commands/record_start";
+import {showStreamingUsersCmd} from "./commands/show_streaming_users";
 
 //コマンドデータを配列に格納
 const commands: Command[] = [
   heyCmd,
-  recordStartCmd,
+  showStreamingUsersCmd,
 ];
 
 //.envファイルを読み込む
@@ -71,5 +71,10 @@ client.on(Events.VoiceStateUpdate, (oldState, newState) => {
   }
 });
 
+
+
+
+
 //ボット作成時のトークンでDiscordと接続
 client.login(process.env.TOKEN);
+
